@@ -1,0 +1,359 @@
+:root {
+    /* Definición de variables */
+    --grid-gap: 1.25rem; /* 20px en Tailwind */
+    --border-color: #e5e7eb; /* color gray-300 en Tailwind */
+    --padding: 1rem; /* p-4 en Tailwind */
+    --background-color: #fff; /* color white en Tailwind */
+    --border-radius: 0.5rem; /* rounded-md en Tailwind */
+    --box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow en Tailwind */
+    --font-size-base: 1rem; /* text-base en Tailwind */
+    --font-size-sm: 0.875rem; /* text-sm en Tailwind */
+    --color-gray-500: #6b7280; /* color gray-500 en Tailwind */
+    --color-gray-300: #e5e7eb; /* color gray-300 en Tailwind */
+    --color-blue-600: #6366f1; /* color blue-600 en Tailwind */
+    --color-black: #111827; /* color black en Tailwind */
+    --transition-duration: 0.3s;
+}
+.grillawoo__container {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    column-gap: 30px;
+}
+.filtradoPor {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #d4d6d7;
+    margin-bottom: 15px;
+}
+.filtradoPor h2 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+#clear-filters {
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 2px;
+    outline: none;
+    color: #434343;
+}
+#clear-filters .icon-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    margin-right: 6px;
+    background-color: #434343;
+    color: white;
+    font-size: 18px;
+    border-radius: 3px;
+}
+input#filtro-busqueda {
+    width: 100%;
+    margin-bottom: 20px;
+}
+#productos-grillawoo .productos-container {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--grid-gap);
+}
+.producto {
+    border: 1px solid var(--border-color);
+    text-align: center;
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    height: 100%;
+}
+.producto.empty-item {
+    border: 0;
+}
+.producto img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: calc(var(--border-radius) / 2); /* la mitad de --border-radius */
+}
+
+.producto h2 {
+    margin: calc(var(--font-size-sm) * 1.5) 0;
+    font-size: 1.2em;
+    padding: 0 10px;
+}
+.producto p {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-500);
+}
+#productos-grillawoo .pagination {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: var(--grid-gap);
+    padding: 0;
+    list-style: none;
+}
+#productos-grillawoo .pagination .page-numbers {
+    display: inline-block;
+    margin: 0 5px;
+    padding: var(--padding);
+    background-color: var(--color-gray-300);
+    color: var(--color-black);
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    transition: background-color var(--transition-duration), color var(--transition-duration);
+}
+#productos-grillawoo .pagination .page-numbers:focus {
+    outline: 0;
+}
+
+
+
+
+#productos-grillawoo .pagination .page-numbers:hover {
+    background-color: #c7c7c7;
+}
+#productos-grillawoo .pagination .page-numbers.current {
+    background-color: var(--color-blue-600);
+    color: var(--background-color);
+}
+#productos-grillawoo .pagination a.active {
+    font-weight: bold;
+}
+.grillawoo_container__grid {
+    display: grid;
+    grid-template-columns: 1fr 3fr; /* 1/4 y 3/4 de ancho respectivamente */
+    gap: 20px; /* Espacio entre los elementos del grid */
+}
+.grillawoo_container__filtros {
+    /* Estilos adicionales para los filtros si es necesario */
+}
+.grillawoo_container__productos {
+    /* Estilos adicionales para los productos si es necesario */
+}
+.grillawoo_container__imagen {
+    padding-bottom: 20px;
+}
+/* Estilos para el contenedor de filtros */
+.grillawoo_container__filtros {
+    padding: 20px; /* Espaciado interno */
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Espacio entre elementos */
+}
+/* Estilo para la barra de búsqueda y el select */
+.grillawoo_container__filtros input[type="text"],
+.grillawoo_container__filtros select {
+    padding: 10px;
+    border: 1px solid #ddd; /* Borde sutil */
+    border-radius: 5px; /* Bordes redondeados */
+    font-size: 16px; /* Tamaño de fuente legible */
+}
+
+/* Estilo para el botón de filtros */
+.grillawoo_container__filtros button {
+    background-color: #5c6ac4; /* Color de fondo */
+    color: white; /* Texto en blanco */
+    border: none; /* Sin borde */
+    padding: 10px 15px;
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cursor de mano al pasar el mouse */
+    font-weight: bold; /* Texto en negrita */
+}
+.grillawoo_container__filtros button:hover {
+    background-color: #4a56a0; /* Color al pasar el mouse */
+}
+/* Estilos para el contenedor de productos */
+.grillawoo_container__productos {
+    background-color: #ffffff; /* Fondo blanco */
+    padding: 20px; /* Espaciado interno */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra suave */
+}
+/* Estilos para pantallas medianas (tablets) */
+@media (max-width: 950px) {
+    .grillawoo__container {
+        grid-template-columns: 1fr 2fr; /* Columnas apiladas en dispositivos más pequeños */
+        column-gap:20px
+    }
+    .grillawoo_container__filtros,
+    .grillawoo_container__productos {
+        padding: 15px; /* Espaciado más pequeño para pantallas más estrechas */
+    }
+}
+@media (max-width: 810px) {
+    .grillawoo__container {
+        grid-template-columns: 3fr 5fr; /* Columnas apiladas en dispositivos más pequeños */
+    }
+    #productos-grillawoo .productos-container {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+/* Estilos para pantallas pequeñas (móviles) */
+@media (max-width: 665px) {
+    .grillawoo__container {
+        grid-template-columns: 1fr; /* Columnas apiladas en dispositivos móviles */
+    }
+
+    .grillawoo_container__filtros select,
+    .grillawoo_container__filtros input[type="text"],
+    .grillawoo_container__filtros button {
+        width: 100%; /* Ancho completo para elementos de formulario en móviles */
+    }
+}
+/* Estilo para simular cuadros de selección en los elementos select */
+.grillawoo_container__filtros .select-filtro {
+    position: relative;
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    padding-right: var(--padding);
+    border-radius: var(--border-radius);
+    appearance: none; /* Ocultar la flecha predeterminada */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.grillawoo_container__filtros .select-filtro::after {
+    content: '\25BC'; /* Flecha hacia abajo */
+    position: absolute;
+    top: 50%;
+    right: var(--padding);
+    transform: translateY(-50%);
+    pointer-events: none; /* Evita que el pseudo-elemento interfiera con el click */
+}
+
+/* Estilos para las opciones */
+.grillawoo_container__filtros .select-filtro option {
+    padding: var(--padding);
+    background-color: var(--background-color);
+    border-bottom: 1px solid var(--border-color);
+}
+h2.isFilterRd__filterTitle {
+    padding: 0 0 10px 0;
+    margin: 0 !important;
+    font-size: 1.2em;
+    text-align: left;
+}
+.isFilterRd {
+    list-style: none;
+    margin: 0 0 20px 0;
+    padding: 0 0 0 1px;
+    border-bottom: 1px solid #d4d6d7;
+    padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: self-start;
+}
+a.button_grillawoo {
+    background-color: #1f375d;
+    color: white;
+    padding: 10px 16px;
+    display: inline-flex;
+    margin: 5px 3px 15px;
+}
+a.button_grillawoo:hover,a.button_grillawoo:focus {
+    background-color: var(--ast-global-color-1);
+    color: white;
+}
+a.button_grillawoo.btn-cotizacion.is-orange {
+    background-color: #ff6c09;
+}
+/* Loader styles */
+.loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    /* background: #f0f0f0; */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+}
+
+.loader .spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top: 4px solid #333;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+.isFilterRd li > * {
+    cursor: pointer;
+    font-weight: normal;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+/*** BUSCADOR ***/
+.search-results {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    width: 100%;
+    overflow-y: auto;
+    z-index: 1000;
+    max-width: 320px;
+    top: 23px;
+}
+.search-result-item {
+    display: grid;
+    grid-template-columns: 2fr 7fr;
+    background: white;
+    border-bottom: 1px #eaeaea solid;
+    list-style-type: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    font-weight: 600;
+}
+.search-result-item .search-result-item__title {
+    display: flex;
+    align-items: center;
+    padding: 4px 12px;
+    line-height: 1.2;
+    text-align: left;
+}
+.search-results .search-item {
+    padding: 10px;
+    cursor: pointer;
+}
+.search-results .search-item:hover {
+    background-color: #f1f1f1;
+}
+.search-results .search-item strong {
+    display: block;
+}
+.search-results .search-item small {
+    color: #666;
+}
+.search-result-item.np {
+    grid-template-columns: 1fr;
+    padding: 0 10px;
+}
+.buttonContainer__buscar {
+    margin-bottom: 15px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+input.buttonContainer__buscar__input {
+    width: 100%;
+}
+.woocommerce .search-result-item__img img {
+    height: 100%;
+    object-fit: cover;
+}
