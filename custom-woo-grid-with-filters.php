@@ -505,7 +505,7 @@ function custom_woo_grid_admin_page() {
                         <?php foreach ($custom_terms as $index => $term): ?>
                             <tr>
                                 <td><input type="text" name="custom_terms[<?php echo $index; ?>][text]" value="<?php echo esc_attr($term['text']); ?>"></td>
-                                <td><input type="url" name="custom_terms[<?php echo $index; ?>][link]" value="<?php echo esc_attr($term['link']); ?>"></td>
+                                <td><input type="text" name="custom_terms[<?php echo $index; ?>][link]" value="<?php echo esc_attr($term['link']); ?>"></td>
                                 <td><input type="url" name="custom_terms[<?php echo $index; ?>][image]" value="<?php echo esc_attr($term['image']); ?>"></td>
                                 <td><button type="button" class="button remove-term-button">Remove</button></td>
                             </tr>
@@ -529,7 +529,7 @@ function custom_woo_grid_admin_page() {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td><input type="text" name="custom_terms[${termIndex}][text]"></td>
-                    <td><input type="url" name="custom_terms[${termIndex}][link]"></td>
+                    <td><input type="text" name="custom_terms[${termIndex}][link]"></td>
                     <td><input type="url" name="custom_terms[${termIndex}][image]"></td>
                     <td><button type="button" class="button remove-term-button">Remove</button></td>
                 `;
