@@ -110,4 +110,40 @@ jQuery(document).ready(function($){
         $('.isFilterRd input[type=checkbox]').prop('checked', false);
         cargarProductosConFiltros();
     });
+
+    // Buscador
+    $('.buttonContainer__buscar__input').on('keyup', function() {
+        var query = $(this).val();
+        var resultsContainer = $(this).siblings('.search-results');
+        if (query.length > 0) {
+            $.ajax({
+                url: my_ajax_object.ajax_url,
+                type: 'GET',
+                data: {
+                    action: 'search_products',
+                    query: query
+                },
+                success: function(response) {
+                    resultsContainer.html(response);
+                    resultsContainer.show();
+                }
+            });
+        } else {
+            resultsContainer.hide();
+        }
+    });
+
+    // Redireccionar cuando se haga clic en un término personalizado
+/*     $(document).on('click', '.search-result-item.custom-term a', function(e) {
+        e.preventDefault();
+        var link = $(this).attr('href');
+        window.location.href = link;
+    });
+ */
+    // Cerrar resultados de búsqueda cuando se hace clic fuera
+    $(document).on('click', function(e) {
+        if (!$('.search-results').is(e.target) && $('.search-results').has(e.target).length === 0) {
+            $('.search-results').hide();
+        }
+    });
 });

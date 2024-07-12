@@ -318,6 +318,7 @@ a.button_grillawoo.btn-cotizacion.is-orange {
     transition: all 0.2s ease;
     font-size: 14px;
     font-weight: 600;
+    color: black
 }
 .search-result-item .search-result-item__title {
     display: flex;

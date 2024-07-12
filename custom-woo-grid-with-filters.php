@@ -339,15 +339,22 @@ function grillawoo_ajax_pagination() {
 add_action('wp_ajax_nopriv_grillawoo_ajax_pagination', 'grillawoo_ajax_pagination');
 add_action('wp_ajax_grillawoo_ajax_pagination', 'grillawoo_ajax_pagination');
 
-// Handle AJAX request
 function search_products() {
     global $wpdb;
     $query = sanitize_text_field($_GET['query']);
 
-    // First query to get products starting with the query
+    // Definir términos personalizados con imágenes
+    $custom_terms = json_decode(get_option('custom_woo_grid_terms', '[]'), true);
+
+    // Filtrar términos personalizados por el query
+    $filtered_custom_terms = array_filter($custom_terms, function($term) use ($query) {
+        return stripos($term['text'], $query) !== false;
+    });
+
+    // Primero obtener productos que comiencen con la consulta
     $args_starts_with = array(
         'post_type' => 'product',
-        'posts_per_page' => -1, // Get all matching products
+        'posts_per_page' => -1, // Obtener todos los productos que coincidan
         'orderby' => 'title',
         'order' => 'ASC',
         's' => $query,
@@ -357,10 +364,10 @@ function search_products() {
     $products_starts_with = new WP_Query($args_starts_with);
     remove_filter('posts_where', 'title_starts_with', 10, 2);
 
-    // Second query to get products containing the query but not starting with it
+    // Luego obtener productos que contengan la consulta pero no comiencen con ella
     $args_contains = array(
         'post_type' => 'product',
-        'posts_per_page' => -1, // Get all matching products
+        'posts_per_page' => -1, // Obtener todos los productos que coincidan
         'orderby' => 'title',
         'order' => 'ASC',
         's' => $query,
@@ -372,6 +379,22 @@ function search_products() {
 
     $products = array_merge($products_starts_with->posts, $products_contains->posts);
 
+    // Primero mostrar términos personalizados
+    if (!empty($filtered_custom_terms)) {
+        foreach ($filtered_custom_terms as $term) {
+            echo '
+            <div >
+                <a class="search-result-item custom-term" href="' . esc_url($term['link']) . '" >
+                    <div class="search-result-item__img">
+                        <img src="' . esc_url($term['image']) . '" alt="' . esc_attr($term['text']) . '">
+                    </div>
+                    <div class="search-result-item__title">' . esc_html($term['text']) . '</div>
+                </a>
+            </div>';
+        }
+    }
+
+    // Luego mostrar productos
     if (!empty($products)) {
         foreach ($products as $product) {
             $product_id = $product->ID;
@@ -433,5 +456,95 @@ function redirect_to_product_page() {
     <?php
 }
 add_action('wp_footer', 'redirect_to_product_page');
+
+
+
+add_action('admin_menu', 'custom_woo_grid_add_admin_menu');
+function custom_woo_grid_add_admin_menu() {
+    add_menu_page(
+        'Woo Grid with Filters',
+        'Woo Grid with Filters',
+        'manage_options',
+        'woo-grid-with-filters',
+        'custom_woo_grid_admin_page',
+        'dashicons-filter',
+        20
+    );
+}
+
+
+function custom_woo_grid_admin_page() {
+    // Verificar que el usuario tiene permisos
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+
+    // Procesar la forma al enviar
+    if (isset($_POST['custom_terms'])) {
+        update_option('custom_woo_grid_terms', sanitize_text_field(wp_json_encode($_POST['custom_terms'])));
+        echo '<div class="notice notice-success is-dismissible"><p>Settings saved.</p></div>';
+    }
+
+    // Obtener términos personalizados almacenados
+    $custom_terms = json_decode(get_option('custom_woo_grid_terms', '[]'), true);
+    ?>
+    <div class="wrap">
+        <h1>Woo Grid with Filters</h1>
+        <form method="post">
+            <table class="form-table" id="custom-terms-table">
+                <thead>
+                    <tr>
+                        <th>Text</th>
+                        <th>Link</th>
+                        <th>Image URL</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($custom_terms)): ?>
+                        <?php foreach ($custom_terms as $index => $term): ?>
+                            <tr>
+                                <td><input type="text" name="custom_terms[<?php echo $index; ?>][text]" value="<?php echo esc_attr($term['text']); ?>"></td>
+                                <td><input type="url" name="custom_terms[<?php echo $index; ?>][link]" value="<?php echo esc_attr($term['link']); ?>"></td>
+                                <td><input type="url" name="custom_terms[<?php echo $index; ?>][image]" value="<?php echo esc_attr($term['image']); ?>"></td>
+                                <td><button type="button" class="button remove-term-button">Remove</button></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+            <button type="button" class="button" id="add-term-button">Add Term</button>
+            <p class="submit">
+                <input type="submit" class="button-primary" value="Save Changes">
+            </p>
+        </form>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const addButton = document.getElementById('add-term-button');
+            const tableBody = document.querySelector('#custom-terms-table tbody');
+            let termIndex = <?php echo count($custom_terms); ?>;
+
+            addButton.addEventListener('click', function() {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><input type="text" name="custom_terms[${termIndex}][text]"></td>
+                    <td><input type="url" name="custom_terms[${termIndex}][link]"></td>
+                    <td><input type="url" name="custom_terms[${termIndex}][image]"></td>
+                    <td><button type="button" class="button remove-term-button">Remove</button></td>
+                `;
+                tableBody.appendChild(row);
+                termIndex++;
+            });
+
+            tableBody.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-term-button')) {
+                    e.target.closest('tr').remove();
+                }
+            });
+        });
+    </script>
+    <?php
+}
 
 ?>
