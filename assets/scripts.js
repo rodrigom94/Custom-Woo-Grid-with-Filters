@@ -25,9 +25,12 @@ jQuery(document).ready(function($){
         var atributos = [];
         $('.isFilterRd input[type=checkbox]:checked').each(function() {
             var $parentUl = $(this).closest('ul');
-            if ($parentUl.attr('id') && !$parentUl.is('#filtro-categoria')) { // Excluir categorías
+            if ($parentUl.attr('id') && !$parentUl.is('#filtro-categoria')) {
                 var taxonomy = $parentUl.attr('id').replace('filtro-', '');
-                atributos.push({ [taxonomy]: $(this).val() });
+                if (!atributos[taxonomy]) {
+                    atributos[taxonomy] = [];
+                }
+                atributos[taxonomy].push($(this).val());
             }
         });
         console.log("categorias", categorias);
@@ -111,10 +114,19 @@ jQuery(document).ready(function($){
         cargarProductosConFiltros();
     });
 
+    // Debouncing function
+    function debounce(func, wait) {
+        let timeout;
+        return function() {
+            const context = this, args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(context, args), wait);
+        };
+    }
+
     // Buscador
-    $('.buttonContainer__buscar__input').on('keyup', function() {
-        var query = $(this).val();
-        var resultsContainer = $(this).siblings('.search-results');
+    const searchProducts = debounce(function(query) {
+        var resultsContainer = $('.buttonContainer__buscar__input').siblings('.search-results');
         if (query.length > 0) {
             $.ajax({
                 url: my_ajax_object.ajax_url,
@@ -131,15 +143,20 @@ jQuery(document).ready(function($){
         } else {
             resultsContainer.hide();
         }
+    }, 1000); // 1 segundo de espera
+
+    $('.buttonContainer__buscar__input').on('keyup', function() {
+        var query = $(this).val();
+        searchProducts(query);
     });
 
     // Redireccionar cuando se haga clic en un término personalizado
-/*     $(document).on('click', '.search-result-item.custom-term a', function(e) {
+    $(document).on('click', '.search-result-item.custom-term a', function(e) {
         e.preventDefault();
         var link = $(this).attr('href');
         window.location.href = link;
     });
- */
+
     // Cerrar resultados de búsqueda cuando se hace clic fuera
     $(document).on('click', function(e) {
         if (!$('.search-results').is(e.target) && $('.search-results').has(e.target).length === 0) {

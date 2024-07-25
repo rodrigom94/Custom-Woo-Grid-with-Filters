@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Custom Woo Grid with Filters
- * Version: 2.0.2
+ * Version: 2.0.6   
  * Description: Custom Woo Grid with Filters
  * Author: rod_melgarejo
  * Author URI: 
@@ -141,9 +141,10 @@ function mostrar_productos_grillawoo($is_ajax_request = false) {
         if (!empty($categorias)) {
             foreach ($categorias as $categoria) {
                 $tax_query[] = array(
+                    'relation' => 'OR',
                     'taxonomy' => 'product_cat',
                     'field' => 'slug',
-                    'terms' => $categoria
+                    'terms' => $categorias
                 );
             }
         }
@@ -152,9 +153,10 @@ function mostrar_productos_grillawoo($is_ajax_request = false) {
             foreach ($atributos as $atributo_array) {
                 foreach ($atributo_array as $atributo => $values) {
                     $tax_query[] = array(
-                        'taxonomy' => sanitize_text_field($atributo), // Add 'pa_' prefix and sanitize
+                        'relation' => 'OR',
+                        'taxonomy' => sanitize_text_field($atributo),
                         'field' => 'slug',
-                        'terms' => array_map('sanitize_text_field', (array) $values), // Sanitize values
+                        'terms' => array_map('sanitize_text_field', (array) $values),
                     );
                 }
             }
@@ -231,7 +233,7 @@ function mostrar_productos_grillawoo($is_ajax_request = false) {
                     <?php foreach (obtener_categorias_producto() as $categoria) : ?>
                         <li>
                             <input type="checkbox" id="cat-<?php echo $categoria->term_id; ?>" value="<?php echo $categoria->slug; ?>">
-                            <label for="cat-<?php echo $categoria->term_id; ?>"><?php echo $categoria->name . ' (' . $categoria->count . ')'; ?></label>
+                            <label for="cat-<?php echo $categoria->term_id; ?>"><?php echo $categoria->name; ?></label>
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -244,7 +246,7 @@ function mostrar_productos_grillawoo($is_ajax_request = false) {
                         <?php foreach ($atributo as $term) : ?>
                             <li>
                                 <input type="checkbox" id="attr-<?php echo $term->term_id; ?>" value="<?php echo $term->slug; ?>">
-                                <label for="attr-<?php echo $term->term_id; ?>"><?php echo $term->name . ' (' . $term->count . ')'; ?></label>
+                                <label for="attr-<?php echo $term->term_id; ?>"><?php echo $term->name; ?></label>
                             </li>
                         <?php endforeach; ?>
                     </ul>
@@ -443,11 +445,14 @@ function redirect_to_product_page() {
                     const item = e.target.closest('.search-result-item');
                     if (item) {
                         const productId = item.getAttribute('data-product-id');
-                        if (window.location.href.includes("https://monge.pe/home-new/")) {
-                            window.location.href = '<?php echo home_url(); ?>/home-new/?cwr_product_id=' + productId + '#productos';
-                        } else { 
-                            window.location.href = '<?php echo home_url(); ?>/?cwr_product_id=' + productId + '#productos';
+                        if(item.href == undefined){
+                            if (window.location.href.includes("https://monge.pe/home-new/")) {
+                                window.location.href = '<?php echo home_url(); ?>/home-new/?cwr_product_id=' + productId + '#productos';
+                            } else { 
+                                window.location.href = '<?php echo home_url(); ?>/?cwr_product_id=' + productId + '#productos';
+                            }
                         }
+
                     }
                 });
             });
