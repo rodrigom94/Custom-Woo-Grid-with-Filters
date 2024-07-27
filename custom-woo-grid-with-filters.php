@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Custom Woo Grid with Filters
- * Version: 2.0.6   
+ * Version: 2.0.9
  * Description: Custom Woo Grid with Filters
  * Author: rod_melgarejo
  * Author URI: 
@@ -216,6 +216,7 @@ function mostrar_productos_grillawoo($is_ajax_request = false) {
         </script>
         <!-- Contenedor principal -->
         <div class="grillawoo__container">
+            
             <!-- Filtro de productos y productos -->
             <div class="outlet_container__filtros">
                 <div class="filtradoPor">
@@ -253,6 +254,13 @@ function mostrar_productos_grillawoo($is_ajax_request = false) {
                 <?php endforeach; ?>
             </div>
             <div id="productos-grillawoo">
+                <!-- Video de YouTube -->
+                <div id="youtube-video-container" style="display:none;">
+                    <div class="youtube-video-wrapper">
+                        <iframe id="youtube-player" width="560" height="315" src="https://www.youtube.com/embed/4sVPBVhOAgU?enablejsapi=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        <button id="close-youtube-video">Cerrar Video</button>
+                    </div>
+                </div>
                 <div class="productos-container">
         <?php
     } else {
@@ -277,6 +285,7 @@ function mostrar_productos_grillawoo($is_ajax_request = false) {
 
                     <div class="marca-producto"><?php echo esc_html(get_post_meta($product->get_id(), 'brand_name', true)); ?></div>
                     <h2><?php the_title(); ?></h2>
+                    <div class="producto-descripcion"><?php echo wp_kses_post($product->get_short_description()); ?></div>
                 </div>
             </div>
 

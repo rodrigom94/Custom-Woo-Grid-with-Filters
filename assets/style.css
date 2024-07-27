@@ -71,6 +71,27 @@ input#filtro-busqueda {
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     height: 100%;
+    position: relative;
+}
+.producto-descripcion {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: black;
+    padding: 10px;
+    z-index: 10;
+    overflow-y: auto;
+    max-height: 100%;
+    line-height: 1.3;
+    height: 100%;
+    align-items: center;
+}
+
+.producto:hover .producto-descripcion {
+    display: flex;
 }
 .producto.empty-item {
     border: 0;
@@ -358,3 +379,51 @@ input.buttonContainer__buscar__input {
     height: 100%;
     object-fit: cover;
 }
+#youtube-video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    max-height: 400px;
+}
+
+.youtube-video-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.youtube-video-wrapper > iframe{
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+#close-youtube-video {
+    position: absolute;
+    top: -46px;
+    right: 0;
+    color: white;
+    border: none;
+    cursor: pointer;
+    background-color: #183775;
+    padding: 10px 30px;
+}
+#close-youtube-video:hover {
+    background-color: #434343;
+}
+#productos-grillawoo {
+    position: relative;
+}
+
+/* Nuevo estilo para ocultar el contenedor de productos cuando el video está activo */
+#productos-grillawoo.video-active .productos-container {
+    display: none;
+}
+
