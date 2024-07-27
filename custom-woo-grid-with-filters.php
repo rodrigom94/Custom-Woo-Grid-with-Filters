@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Custom Woo Grid with Filters
- * Version: 2.0.9
+ * Version: 2.0.12
  * Description: Custom Woo Grid with Filters
  * Author: rod_melgarejo
  * Author URI: 
@@ -127,7 +127,7 @@ function mostrar_productos_grillawoo($is_ajax_request = false) {
     $paged = isset($_POST['page']) ? $_POST['page'] : 1;
     $busqueda = isset($_POST['busqueda']) ? sanitize_text_field($_POST['busqueda']) : '';
     $categorias = isset($_POST['categorias']) ? array_map('sanitize_text_field', $_POST['categorias']) : array();
-    $atributos = isset($_POST['atributos']) ? $_POST['atributos'] : array(); // No sanitizar aún, lo hacemos dentro del loop
+    $atributos = isset($_POST['atributos']) ? $_POST['atributos'] : array();
     $tax_query = array('relation' => 'AND');
 
     if ($cwr_product_id) {
@@ -139,34 +139,34 @@ function mostrar_productos_grillawoo($is_ajax_request = false) {
     } else {
         // Continuar con la consulta normal
         if (!empty($categorias)) {
-            foreach ($categorias as $categoria) {
-                $tax_query[] = array(
-                    'relation' => 'OR',
-                    'taxonomy' => 'product_cat',
-                    'field' => 'slug',
-                    'terms' => $categorias
-                );
-            }
+            $tax_query[] = array(
+                'taxonomy' => 'product_cat',
+                'field' => 'slug',
+                'terms' => $categorias,
+                'operator' => 'IN'
+            );
         }
-
+    
         if (!empty($atributos)) {
-            foreach ($atributos as $atributo_array) {
-                foreach ($atributo_array as $atributo => $values) {
+            foreach ($atributos as $taxonomy => $terms) {
+                if (!empty($terms)) {
                     $tax_query[] = array(
-                        'relation' => 'OR',
-                        'taxonomy' => sanitize_text_field($atributo),
+                        'taxonomy' => sanitize_key($taxonomy),
                         'field' => 'slug',
-                        'terms' => array_map('sanitize_text_field', (array) $values),
+                        'terms' => array_map('sanitize_text_field', $terms),
+                        'operator' => 'IN'
                     );
                 }
             }
         }
-
+    
         $args = array(
             'post_type' => 'product',
             'posts_per_page' => 9,
             'paged' => $paged,
-            'tax_query' => $tax_query
+            'tax_query' => $tax_query,
+            'orderby' => 'title',  // Ordenar por título
+            'order' => 'ASC'       // En orden ascendente
         );
     }
 

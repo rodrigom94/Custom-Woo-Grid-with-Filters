@@ -16,13 +16,27 @@ jQuery(document).ready(function($){
         $('.loader').remove();
     }
 
+    function hideYoutubeVideo() {
+        $('#youtube-video-container').hide();
+        $('#productos-grillawoo').removeClass('video-active');
+        if (player && typeof player.stopVideo === 'function') {
+            player.stopVideo();
+        }
+    }
+
+    // Ocultar video al hacer clic en cualquier checkbox del filtro
+    $('.isFilterRd input[type=checkbox]').on('change', function() {
+        hideYoutubeVideo();
+        cargarProductosConFiltros();
+    });
+
     function fetch_products(page){
         var categorias = [];
         $('#filtro-categoria input[type=checkbox]:checked').each(function() {
             categorias.push($(this).val());
         });
-
-        var atributos = [];
+    
+        var atributos = {};
         $('.isFilterRd input[type=checkbox]:checked').each(function() {
             var $parentUl = $(this).closest('ul');
             if ($parentUl.attr('id') && !$parentUl.is('#filtro-categoria')) {
